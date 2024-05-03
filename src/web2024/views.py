@@ -1,6 +1,10 @@
 from flask import render_template, request
+import os
+import sys
+import werkzeug
 
 from web2024 import app
+from web2024 import files
 
 @app.route('/')
 def index():
@@ -21,3 +25,68 @@ def upload_post():
     ユーザーがアップロードしたファイルを受け取り、templates/profile/<userid>以下に保存する
     useridとファイルはフォームから取得する
     '''
+    print('get request')
+    # if request.form['password'] != 'password':
+    #     return 'password is wrong'
+
+    userid = request.form['userid']
+
+    # ファイルを取得
+    html_list = request.files.getlist('html')
+    css_list = request.files.getlist('css')
+    image_list = request.files.getlist('image')
+
+    print(html_list)
+    print(css_list)
+    print(image_list)
+
+
+    # アップロード先のディレクトリを作成
+    upload_dir = os.path.join('src/web2024/templates/profile', userid)
+    try:
+        os.makedirs(upload_dir)
+    except FileExistsError:
+        pass
+    
+    try:
+        os.makedirs(os.path.join(upload_dir, 'css'))
+    except FileExistsError:
+        pass
+    
+    try:
+        os.makedirs(os.path.join(upload_dir, 'image'))
+    except FileExistsError:
+        pass
+
+
+    # ファイルを保存
+    for html in html_list:
+        filename = html.filename
+        if filename == '':
+            continue
+        if not filename.endswith('.html'):
+            return 'file is not html'
+        html.save(os.path.join('src/web2024/templates/profile', userid, filename))
+
+    for css in css_list:
+        filename = css.filename
+        if filename == '':
+            continue
+        if not filename.endswith('.css'):
+            return 'file is not css'
+        css.save(os.path.join('src/web2024/templates/profile', userid, 'css', filename))
+
+    for image in image_list:
+        filename = image.filename
+        if filename == '':
+            continue
+        if not filename.endswith('.png') and not filename.endswith('.jpg') and not filename.endswith('.jpeg'):
+            return 'file is not image'
+        image.save(os.path.join('src/web2024/templates/profile', userid, 'image', filename))
+
+    return 'ok'
+
+@app.errorhandler(werkzeug.exceptions.RequestEntityTooLarge)
+def handle_over_max_file_size(error):
+    print("werkzeug.exceptions.RequestEntityTooLarge")
+    return 'result : file size is overed.'
