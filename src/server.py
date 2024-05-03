@@ -1,4 +1,4 @@
-from uploader import app
+from web2024 import app
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
