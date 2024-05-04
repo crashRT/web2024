@@ -1,9 +1,55 @@
+{% extends 'template.html' %}
 
-<form action="/upload" method="POST" enctype="multipart/form-data">
-<input type="text" name="password"/>
-<input type="text" name="userid"/>
-<input type="file" name="html" multiple/>
-<input type="file" name="css" multiple/>
-<input type="file" name="image" multiple/>
-<button type="submit">送信</button>
-</form> 
+{% block content %}
+<script>
+    function checkfile(type) {
+        //getElementByIdで上記のhtmlのID id="file_input"　から選択されたファイルの情報を読み込む。
+        var file_name = document.getElementById("form-" + type).files;
+        //変数定義
+        var list = "";
+        //for文で入っているファイルの文だけファイル名を取得する
+        for (var i = 0; i < file_name.length; i++) {
+            list += file_name[i].name + " ,"
+        }
+        //list の文字列の末尾の一文字を削除する
+        var result = list.substr(0, list.length - 1);
+        //document.getElementByIdで idを selectfile に指定してdocument.getElementById("selectfile").valueで中身を変数resultで指定する
+        document.getElementById("selected-" + type).textContent = result;
+    }
+</script>
+<div class="container">
+    <h1 class="h1 my-3">webサイトアップローダー</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <div class="my-3">
+            <label class="form-label" for="userid">ユーザーID</label>
+            <input class="form-control" type="text" name="userid" />
+        </div>
+        <div class="my-3">
+            <label class="form-label" for="html">HTMLファイル</label>
+            <input class="form-control" type="file" name="html" multiple id="form-html" onchange="checkfile('html')" />
+            <p id="selected-html"></p>
+        </div>
+        <div class="my-3">
+            <label class="form-label" for="userid">CSSファイル</label>
+            <input class="form-control" type="file" name="css" multiple id="form-css" onchange="checkfile('css')" />
+            <p id="selected-css"></p>
+        </div>
+        <div class="my-3">
+            <label class="form-label" for="userid">画像ファイル(PNG, JPGのみ)</label>
+            <input class="form-control" type="file" name="image" multiple id="form-image"
+                onchange="checkfile('image')" />
+            <p id="selected-image"></p>
+        </div>
+        <div class="my-3">
+            <label class="form-label" for="userid">アップロード用パスワード</label>
+            <input class="form-control" type="password" name="password" />
+        </div>
+        <div class="my-3">
+            <button class="btn btn-primary" type="submit">送信</button>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+{% endblock %}

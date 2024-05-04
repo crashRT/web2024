@@ -1,0 +1,10 @@
+{% extends 'template.html' %}
+{% block content %}
+<div class="container">
+    <h1 class="h1 my-3">アップロード完了</h1>
+    <p>アップロードが完了しました。</p>
+    <p>アップロード先：<a href="{{uploaded_url}}">{{ uploaded_url }}</a></p>
+    <a href="/upload">アップロード画面に戻る</a>
+
+</div>
+{% endblock %}
