@@ -9,6 +9,8 @@ services:
       - "9090:9090"
     volumes:
       - .:/app
+    env_file:
+      - .env
 
   nginx:
     image: nginx:latest
