@@ -4,17 +4,12 @@ import sys
 import werkzeug
 
 from web2024 import app
-from web2024.config import UPLOAD_DIR
+from web2024.config import UPLOAD_DIR, PASSWORD
 
 
 @app.route("/")
 def index():
     return render_template("index.html")
-
-
-@app.route("/profile/<string:id>")
-def profile(id):
-    return render_template("profile/" + id + "/index.html")
 
 
 @app.route("/upload")
@@ -30,8 +25,8 @@ def upload_post():
     useridとファイルはフォームから取得する
     """
     print("get request")
-    # if request.form['password'] != 'password':
-    #     return 'password is wrong'
+    if request.form["password"] != PASSWORD:
+        return "password is wrong"
 
     userid = request.form["userid"]
 
