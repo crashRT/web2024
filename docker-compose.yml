@@ -1,7 +1,7 @@
 services:
   flask:
     build: .
-    container_name: flask
+    container_name: web2024-flask
     ports:
       - "3031:3031"
     volumes:
@@ -11,7 +11,7 @@ services:
 
   nginx:
     image: nginx:latest
-    container_name: nginx
+    container_name: web2024-nginx
     ports:
       - "8081:80"
     volumes:
