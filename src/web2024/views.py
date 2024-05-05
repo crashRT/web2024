@@ -2,6 +2,7 @@ from flask import render_template, request
 import os
 import sys
 import werkzeug
+from werkzeug.utils import secure_filename
 
 from web2024 import app
 from web2024.config import UPLOAD_DIR, PASSWORD
@@ -28,7 +29,7 @@ def upload_post():
     if request.form["password"] != PASSWORD:
         return "password is wrong"
 
-    userid = request.form["userid"]
+    userid = secure_filename(request.form["userid"])
 
     # ファイルを取得
     html_list = request.files.getlist("html")
@@ -58,7 +59,7 @@ def upload_post():
 
     # ファイルを保存
     for html in html_list:
-        filename = html.filename
+        filename = secure_filename(html.filename)
         if filename == "":
             continue
         if not filename.endswith(".html"):
@@ -66,7 +67,7 @@ def upload_post():
         html.save(os.path.join(UPLOAD_DIR, userid, filename))
 
     for css in css_list:
-        filename = css.filename
+        filename = secure_filename(css.filename)
         if filename == "":
             continue
         if not filename.endswith(".css"):
@@ -74,7 +75,7 @@ def upload_post():
         css.save(os.path.join(UPLOAD_DIR, userid, "css", filename))
 
     for image in image_list:
-        filename = image.filename
+        filename = secure_filename(image.filename)
         if filename == "":
             continue
         if (
